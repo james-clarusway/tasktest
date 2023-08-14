@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: typescript
+  labels:
+    app: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: 2typescript
+        ports:
+        - containerPort: 80
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      containers:
+      - env:
+        - name: FACEBOOK_ID
+          value: facebookID
+        - name: FACEBOOK_SECRET
+          value: facebooksecret
+        - name: MONGODB_URI
+          value: mongodb://root:Password1!@maindb:27017/
+        - name: MONGODB_URI_LOCAL
+          value: mongodb://root:Password1!@maindb:27017/
+        - name: PORT
+          value: "3000"
+        - name: SENDGRID_PASSWORD
+          value: mysecurepassword
+        - name: SENDGRID_USER
+          value: myusername
+        - name: SESSION_SECRET
+          value: sessionsecret
+        image: yigitaslantekin/typescript:0.1  
+        imagePullPolicy: ""
+        name: web  
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

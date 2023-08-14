@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+    kompose.version: 1.21.0 (992df58d8)
+  labels:
+    io.kompose.service: maindb #bu deploymentin labeli. Servis bunu yakalamaz servis 25.satırdaki labeli yakalar. 
+  name: maindb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: maindb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: maindb
+    spec:
+      containers:
+      - env:
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: Password1!
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        image: mongo:4.4.6
+        imagePullPolicy: ""
+        name: maindb
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: maindb
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: maindb
+        persistentVolumeClaim:
+          claimName: maindb
+status: {}
